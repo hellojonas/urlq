@@ -22,7 +22,7 @@ Between                   | *field[:]:*
 Use semicolon (;) to separate fields, for example the following filters a 
 resource which name is Logo and age is lower than 18.
 
-```HTTP
+```
 /resource?filters=name[~in]:Lugo;age[lt]:18
 ```
 
@@ -33,7 +33,7 @@ which names not contained in the list specified.
 
 When used with between filter **field[:]:** commas are ignored.
 
-```HTTP
+```
 /resource?name[~in]:Higor,Lugo
 ```
 
@@ -43,6 +43,6 @@ Use underscore (_) to crate composite paths, for example the following filters
 a resource which sub-resource creation date is between 2000-01-10 and 
 2005-04-22.
 
-```HTTP
+```
 /resource?subResource_createdAt[:]:2000-01-10,2005-04-22
 ```
