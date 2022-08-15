@@ -1,0 +1,15 @@
+filters=name:pedro
+
+filters=name[~]:lucas
+
+filters=name[#]:milcar
+
+filters=age[lt]:16
+
+filters=fname[in]:[luis,tone]
+
+filters=lname[~in]:[mateus]
+
+filters=birthday[:]:2000-05-01,2010-05-30
+
+filters=name:pedro;age[gt]:16;resource?birthday[:]:2000-05-01,2010-05-30;lname[~in]:[mateus,lucas]

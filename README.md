@@ -13,7 +13,7 @@ Less than                 | *field[lt]:*
 Less than or equal        | *field[lte]:*
 Greater than              | *field[gt]:*
 Greater than or equal     | *field[gte]:*
-In                        | *field[in]:*
+In                        | *field[in]:[*]
 Not in                    | *field[~in]:*
 Between                   | *field[:]:*
 
@@ -46,3 +46,11 @@ a resource which sub-resource creation date is between 2000-01-10 and
 ```
 /resource?subResource_createdAt[:]:2000-01-10,2005-04-22
 ```
+
+https://path-to-resource.com/resource?name:pedro
+https://path-to-resource.com/resource?name[~]:lucas
+https://path-to-resource.com/resource?name[#]:milcar
+https://path-to-resource.com/resource?age[lt]:16
+https://path-to-resource.com/resource?fname[in]:[luis,tone]
+https://path-to-resource.com/resource?lname[~in]:[mateus]
+https://path-to-resource.com/resource?bithday[:]:2000-05-01:2010-05-30
