@@ -1,4 +1,6 @@
-query               ::= logic_or* ;
+query               ::= expression* ;
+
+expression          ::= logic_or ;
 
 logic_or            ::= login_and ( "[or]" login_and ) * ;
 
@@ -16,24 +18,30 @@ expression          ::= equality
                         | not_include
                         | between ;
 
-equality            ::= field_expr ":" primary ;
-difference          ::= field_expr "[~]" primary ;
-contain             ::= field_expr "[#]" primary ;
-not_contain         ::= field_expr "[~#]" primary ;
-lesser              ::= field_expr "[lt]" primary ;
-lesser_equal        ::= field_expr "[~lt]" primary ;
-greater             ::= field_expr "[gt]" primary ;
-greater_equal       ::= field_expr "[~gt]" primary ;
-include             ::= field_expr "[in]" array ;
-not_include         ::= field_expr "[~in]" array ;
-between             ::= field_expr "[:]" array ;
+equality            ::= path "[:]" primary ;
+difference          ::= path "[~:]" primary ;
+contain             ::= path "[#]" primary ;
+not_contain         ::= path "[~#]" primary ;
+lesser              ::= path "[lt]" primary ;
+lesser_equal        ::= path "[lte]" primary ;
+greater             ::= path "[gt]" primary ;
+greater_equal       ::= path "[gte]" primary ;
+include             ::= path "[in]" array ;
+not_include         ::= path "[~in]" array ;
+between             ::= path "[::]" array ;
 
-array               ::= primary ( "," primary)*
+array               ::= literal ( "," literal)*
 
 primary             ::= path
-                        | STRING
+                        | literal
+                        | "(" expression ")" ;
+
+literal             ::= STRING
                         | NUMBER
                         | TRUE
-                        | FALSE ;
+                        | FALSE 
+                        | date_expr
 
-path                ::= "$" FIELD ( "_" FIELD )* ;
+date_expr           ::= "$'" DATE "'";
+
+path                ::= FIELD ( "_" FIELD )* ;
