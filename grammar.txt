@@ -1,0 +1,39 @@
+query               ::= logic_or* ;
+
+logic_or            ::= login_and ( "[or]" login_and ) * ;
+
+login_and           ::= expression ( "[and]" expression )* ;
+
+expression          ::= equality 
+                        | difference
+                        | not_contain
+                        | contain
+                        | lesser
+                        | lesser_equal
+                        | greater
+                        | greater_equal
+                        | include
+                        | not_include
+                        | between ;
+
+equality            ::= field_expr ":" primary ;
+difference          ::= field_expr "[~]" primary ;
+contain             ::= field_expr "[#]" primary ;
+not_contain         ::= field_expr "[~#]" primary ;
+lesser              ::= field_expr "[lt]" primary ;
+lesser_equal        ::= field_expr "[~lt]" primary ;
+greater             ::= field_expr "[gt]" primary ;
+greater_equal       ::= field_expr "[~gt]" primary ;
+include             ::= field_expr "[in]" array ;
+not_include         ::= field_expr "[~in]" array ;
+between             ::= field_expr "[:]" array ;
+
+array               ::= primary ( "," primary)*
+
+primary             ::= path
+                        | STRING
+                        | NUMBER
+                        | TRUE
+                        | FALSE ;
+
+path                ::= "$" FIELD ( "_" FIELD )* ;
