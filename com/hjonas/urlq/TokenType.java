@@ -9,6 +9,7 @@ enum TokenType {
 	COMMA,
 	L_PAREN,
 	R_PAREN,
+	UNDERSCORE,
 
 	EQUAL,
 	NOT_EQUAL,
@@ -22,7 +23,7 @@ enum TokenType {
 	NOT_INCLUDE,
 	BETWEEN,
 
-	PATH,
+	IDENTIFIER,
 	STRING,
 	NUMBER,
 	TRUE,

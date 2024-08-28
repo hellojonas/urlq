@@ -39,6 +39,10 @@ class Lexer {
 					addToken(TokenType.COMMA);
 					break;
 				}
+				case '_': {
+					addToken(TokenType.UNDERSCORE);
+					break;
+				}
 				case '$': {
 					if (peek() == '"') {
 						advance();
@@ -90,7 +94,7 @@ class Lexer {
 	}
 
 	private void identifier() {
-		while (isAlphaNum(peek()) || peek() == '_') {
+		while (isAlphaNum(peek())) {
 			advance();
 		}
 		String str = source.substring(start, current);
@@ -100,7 +104,7 @@ class Lexer {
 			addToken(tType);
 		}
 
-		addToken(TokenType.PATH, str);
+		addToken(TokenType.IDENTIFIER, str);
 	}
 
 	private void number() {
@@ -118,8 +122,8 @@ class Lexer {
 	}
 
 	private boolean isAlpha(char ch) {
-		return ch >= 'a' && ch <= 'z' 
-			|| ch >= 'A' && ch <= 'Z';
+		return ch >= 'a' && ch <= 'z'
+				|| ch >= 'A' && ch <= 'Z';
 	}
 
 	private boolean isDigit(char ch) {

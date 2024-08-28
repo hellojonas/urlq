@@ -30,6 +30,8 @@ include             ::= path "[in]" array ;
 not_include         ::= path "[~in]" array ;
 between             ::= path "[::]" array ;
 
+path                ::= IDENTIFIER ( "_" IDENTIFIER )* ;
+
 array               ::= literal ( "," literal)*
 
 primary             ::= path
@@ -38,10 +40,10 @@ primary             ::= path
 
 literal             ::= STRING
                         | NUMBER
+                        | IDENTIFIER
                         | TRUE
                         | FALSE 
                         | date_expr
 
 date_expr           ::= "$'" DATE "'";
 
-path                ::= FIELD ( "_" FIELD )* ;
