@@ -6,11 +6,11 @@ import java.util.Map;
 class Token {
 	final TokenType type;
 	final String lexeme;
-	final String literal;
+	final Object literal;
 	final int start;
 	final int end;
 
-	Token(TokenType type, String lexeme, String literal, int start, int end) {
+	Token(TokenType type, String lexeme, Object literal, int start, int end) {
 		this.type = type;
 		this.lexeme = lexeme;
 		this.literal = literal;

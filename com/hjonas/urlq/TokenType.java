@@ -6,10 +6,9 @@ enum TokenType {
 	AND,
 	OR,
 
+	COMMA,
 	L_PAREN,
 	R_PAREN,
-	L_BRACE,
-	R_BRACE,
 
 	EQUAL,
 	NOT_EQUAL,
