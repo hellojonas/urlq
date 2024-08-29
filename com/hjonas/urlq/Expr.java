@@ -19,7 +19,7 @@ abstract class Expr {
 	}
 
 	static class Literal extends Expr {
-		final Object value = null;
+		final Object value;
 
 		Literal(Object value) {
 			this.value = value;
