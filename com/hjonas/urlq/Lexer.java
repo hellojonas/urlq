@@ -25,6 +25,12 @@ class Lexer {
 		while (!isAtEnd()) {
 			char ch = advance();
 			switch (ch) {
+				case ' ':
+				case '\t':
+				case '\n': {
+					start = current;
+					continue;
+				}
 				case '[': {
 					operator();
 					break;
