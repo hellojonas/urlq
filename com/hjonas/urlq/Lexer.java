@@ -111,11 +111,13 @@ class Lexer {
 		while (isAlphaNum(peek())) {
 			advance();
 		}
+
 		String str = source.substring(start, current);
 		TokenType tType = Token.KEYWORDS.get(str);
 
 		if (tType != null) {
 			addToken(tType);
+			return;
 		}
 
 		addToken(TokenType.IDENTIFIER, str);
