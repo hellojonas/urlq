@@ -1,6 +1,4 @@
-query               ::= expression* ;
-
-expression          ::= logic_or ;
+query               ::= logic_or ;
 
 logic_or            ::= login_and ( "[or]" login_and ) * ;
 
@@ -32,18 +30,13 @@ between             ::= path "[::]" array ;
 
 path                ::= IDENTIFIER ( "_" IDENTIFIER )* ;
 
-array               ::= literal ( "," literal)*
+array               ::= primary ( "," primary )* ;
 
-primary             ::= path
-                        | literal
-                        | "(" expression ")" ;
-
-literal             ::= STRING
+primary             ::=  STRING
                         | NUMBER
                         | IDENTIFIER
                         | TRUE
                         | FALSE 
-                        | date_expr
-
-date_expr           ::= "$'" DATE "'";
+                        | "$\"" DATE "\""
+                        | "(" expression ")" ;
 
