@@ -1,9 +1,11 @@
 package com.hjonas.urlq;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 class Lexer {
@@ -78,7 +80,13 @@ class Lexer {
 		}
 		advance();
 		String strDate = source.substring(start + 2, current - 1);
-		addToken(TokenType.DATE, strDate);
+
+		try {
+			addToken(TokenType.DATE,
+					Date.from(LocalDateTime.parse(strDate).atZone(ZoneId.systemDefault()).toInstant()));
+		} catch (DateTimeParseException e) {
+			// TODO: report error
+		}
 	}
 
 	private void string() {
@@ -118,7 +126,7 @@ class Lexer {
 			}
 		}
 
-		addToken(TokenType.NUMBER, source.substring(start, current));
+		addToken(TokenType.NUMBER, Double.valueOf(source.substring(start, current)));
 	}
 
 	private boolean isAlpha(char ch) {

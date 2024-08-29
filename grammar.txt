@@ -14,7 +14,11 @@ expression          ::= equality
                         | greater_equal
                         | include
                         | not_include
-                        | between ;
+                        | between 
+                        | group ;
+
+
+group               ::= "(" query ")" ;
 
 equality            ::= path "[:]" primary ;
 difference          ::= path "[~:]" primary ;
@@ -37,6 +41,5 @@ primary             ::=  STRING
                         | IDENTIFIER
                         | TRUE
                         | FALSE 
-                        | "$\"" DATE "\""
-                        | "(" expression ")" ;
+                        | "$\"" DATE "\"" ;
 

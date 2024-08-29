@@ -22,11 +22,15 @@ class URLQ {
 				+ "[or]" + inactiveVerified
 				+ "[or]" + between;
 
-		Lexer lexer = new Lexer(query);
-		List<Token> tokens  = lexer.tokens();
+		query = "(name[:]jose[or]surname[:]pedro)[and]age[lt]18";
 
-		for (Token token : tokens) {
-			System.out.println(token);
-		}
+		Lexer lexer = new Lexer(query);
+		List<Token> tokens = lexer.tokens();
+
+		Parser parser = new Parser(tokens);
+		Expr queryAst = parser.parse();
+
+		AstPrinter printer = new AstPrinter();
+		printer.print(queryAst);
 	}
 }

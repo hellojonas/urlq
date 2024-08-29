@@ -1,6 +1,7 @@
 package com.hjonas.urlq;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 class Parser {
@@ -34,16 +35,19 @@ class Parser {
 			Token operator = advance();
 			expr = new Expr.Binary(operator, expr, expression());
 		}
+
+		return expr;
 	}
 
 	Expr expression() {
-		Expr left = path();
-
-		if (left == null) {
-			// TODO: handle this case
+		if (match(TokenType.L_PAREN)) {
+			advance();
+			return group();
 		}
 
+		Expr left = path();
 		Token operator = peek();
+		Expr expr = null;
 
 		switch (operator.type) {
 			case EQUAL:
@@ -55,18 +59,30 @@ class Parser {
 			case GREATER:
 			case GREATER_EQUAL: {
 				advance();
-				return new Expr.Binary(operator, left, primary());
+				expr = new Expr.Binary(operator, left, primary());
+				break;
 			}
 			case INCLUDE:
 			case NOT_INCLUDE:
 			case BETWEEN: {
 				advance();
-				return new Expr.Binary(operator, left, array());
-			}
-			default: {
-				// TODO: report error: expected operator
+				expr = new Expr.Binary(operator, left, array());
+				break;
 			}
 		}
+
+		return expr;
+	}
+
+	Expr group() {
+		Expr expr = logicOr();
+
+		if (!match(TokenType.R_PAREN)) {
+			throw new RuntimeException("expected ')' after group.");
+		}
+
+		advance();
+		return expr;
 	}
 
 	Expr path() {
@@ -103,6 +119,33 @@ class Parser {
 	}
 
 	Expr primary() {
+		Token token = peek();
+
+		switch (token.type) {
+			case STRING: {
+				advance();
+				return new Expr.Literal((String) token.literal);
+			}
+			case NUMBER: {
+				advance();
+				return new Expr.Literal((Double) token.literal);
+			}
+			case DATE: {
+				advance();
+				return new Expr.Literal((Date) token.literal);
+			}
+			case IDENTIFIER: {
+				return path();
+			}
+			case TRUE: {
+				return new Expr.Literal(true);
+			}
+			case FALSE: {
+				return new Expr.Literal(false);
+			}
+		}
+
+		throw new RuntimeException("expected literal after operator.");
 	}
 
 	boolean isAtEnd() {
