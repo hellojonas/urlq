@@ -82,14 +82,18 @@ class Parser {
 		}
 
 		advance();
-		return expr;
+		return new Expr.Group(expr);
 	}
 
 	Expr path() {
 		List<Token> identifiers = new ArrayList<>();
-		if (match(TokenType.IDENTIFIER)) {
-			identifiers.add(advance());
+		if (!match(TokenType.IDENTIFIER)) {
+			// TODO: report proper error
+			throw new RuntimeException("expected identfier");
 		}
+
+		identifiers.add(advance());
+
 		while (match(TokenType.UNDERSCORE)) {
 			advance();
 			if (match(TokenType.IDENTIFIER)) {
@@ -99,16 +103,12 @@ class Parser {
 			// TODO: report error expected identifier
 		}
 
-		if (identifiers.isEmpty()) {
-			// TODO: report error expected identifier
-		}
-
 		return new Expr.Path(identifiers);
 	}
 
 	Expr array() {
 		List<Expr> elements = new ArrayList<>();
-		Expr element = primary();
+		elements.add(primary());
 
 		while (match(TokenType.COMMA)) {
 			advance();

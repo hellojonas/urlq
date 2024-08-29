@@ -22,7 +22,6 @@ class URLQ {
 				+ "[or]" + inactiveVerified
 				+ "[or]" + between;
 
-		query = "(name[:]jose[or]surname[:]pedro)[and]age[lt]18";
 
 		Lexer lexer = new Lexer(query);
 		List<Token> tokens = lexer.tokens();
