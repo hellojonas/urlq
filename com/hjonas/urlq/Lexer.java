@@ -81,8 +81,8 @@ class Lexer {
 			advance();
 		}
 		if (isAtEnd()) {
-			// TODO: report unterminated date
-			return;
+			String err = error("Invalid date literal", start, current);
+			throw new LexerError(err);
 		}
 		advance();
 		String strDate = source.substring(start + 2, current - 1);
@@ -91,7 +91,8 @@ class Lexer {
 			addToken(TokenType.DATE,
 					Date.from(LocalDateTime.parse(strDate).atZone(ZoneId.systemDefault()).toInstant()));
 		} catch (DateTimeParseException e) {
-			// TODO: report error
+			String err = error("Invalid date format. must be (yyyy-MM-ddTHH:mm:ss)", start, current);
+			throw new LexerError(err);
 		}
 	}
 
@@ -100,8 +101,8 @@ class Lexer {
 			advance();
 		}
 		if (isAtEnd()) {
-			// TODO: report unterminated string
-			return;
+			String err = error("Unterminate string.", start, current);
+			throw new LexerError(err);
 		}
 		advance();
 		addToken(TokenType.STRING, source.substring(start + 1, current - 1));
@@ -155,12 +156,20 @@ class Lexer {
 			advance();
 		}
 		if (isAtEnd()) {
-			// TODO: report unterminated operator
-			return;
+			String err = error("Unterminated operator.", start, current);
+			throw new LexerError(err);
 		}
 		advance();
 		String op = source.substring(start, current);
-		addToken(Token.KEYWORDS.get(op));
+
+		TokenType type = Token.KEYWORDS.get(op);
+
+		if (type == null) {
+			String err = error("Invalid operator.", start, current);
+			throw new LexerError(err);
+		}
+
+		addToken(type);
 	}
 
 	void addToken(TokenType type) {
@@ -191,5 +200,11 @@ class Lexer {
 
 	boolean isAtEnd() {
 		return current >= source.length();
+	}
+
+	private String error(String message, int colStart, int colEnd) {
+		String err = message + "\n"
+				+ "col [" + colStart + ", " + colEnd + "]: near '" + source.substring(colStart, colEnd) + "'";
+		return err;
 	}
 }

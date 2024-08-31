@@ -78,7 +78,7 @@ class Parser {
 		Expr expr = logicOr();
 
 		if (!match(TokenType.R_PAREN)) {
-			throw new RuntimeException("expected ')' after group.");
+			throw new ParserError(error("expected ')' after group.", prev()));
 		}
 
 		advance();
@@ -88,8 +88,7 @@ class Parser {
 	Expr path() {
 		List<Token> identifiers = new ArrayList<>();
 		if (!match(TokenType.IDENTIFIER)) {
-			// TODO: report proper error
-			throw new RuntimeException("expected identfier");
+			throw new ParserError(error("expected identifier.", prev()));
 		}
 
 		identifiers.add(advance());
@@ -100,7 +99,7 @@ class Parser {
 				identifiers.add(advance());
 				continue;
 			}
-			// TODO: report error expected identifier
+			throw new ParserError(error("Invalid path, expected identifier after '_'.", prev()));
 		}
 
 		return new Expr.Path(identifiers);
@@ -147,7 +146,7 @@ class Parser {
 			}
 		}
 
-		throw new RuntimeException("expected literal after operator.");
+		throw new ParserError(error("Expected literal.", prev()));
 	}
 
 	boolean isAtEnd() {
@@ -167,5 +166,24 @@ class Parser {
 			return false;
 		}
 		return tokens.get(current).type.equals(type);
+	}
+
+	Token prev() {
+		if (current == 0) {
+			return null;
+		}
+		return tokens.get(current - 1);
+	}
+
+	private String error(String message, Token prev) {
+		String err = "";
+		if (prev == null) {
+			err = message + "\n" + "col [" + 0 + "]";
+		}
+
+		err = message + "\n"
+				+ "col [" + prev.end + "]: near '" + prev.lexeme + "'";
+
+		return err;
 	}
 }
