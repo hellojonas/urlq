@@ -11,7 +11,7 @@ class URLQ {
 		String include = "name[in]\"hugo\",\"manuel\",surname";
 		String notInclude = "((name[~in]\"araujo\"[and]surname[in]\"manuel\",\"mateus\")[and]name[#]\"sa\"))";
 		String inactiveVerified = "inactive[:]false[and]verified[:]true";
-		String between = "profile_alias_createdAt[::]$\"2024-01-30\",$\"2024-05-20\"";
+		String between = "profile_alias_createdAt [::] $\"2024-01-30T00:00:00\", $\"2024-05-20T00:00:00\"";
 
 		String query = equalNotEqual
 				+ "[or]" + containNotContain
@@ -24,7 +24,7 @@ class URLQ {
 
 
 		Lexer lexer = new Lexer(query);
-		List<Token> tokens = lexer.tokens();
+		List<Token> tokens = lexer.scan();
 
 		Parser parser = new Parser(tokens);
 		Expr queryAst = parser.parse();

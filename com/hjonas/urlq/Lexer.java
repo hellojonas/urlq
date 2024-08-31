@@ -21,7 +21,7 @@ class Lexer {
 		this.tokens = new ArrayList<>();
 	}
 
-	List<Token> tokens() {
+	List<Token> scan() {
 		while (!isAtEnd()) {
 			char ch = advance();
 			switch (ch) {
