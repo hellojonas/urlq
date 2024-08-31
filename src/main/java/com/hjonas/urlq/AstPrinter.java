@@ -2,7 +2,7 @@ package com.hjonas.urlq;
 
 import java.util.stream.Collectors;
 
-class AstPrinter {
+public class AstPrinter {
 
 	void print(Expr expr) {
 		System.out.println(println(expr, 0));
