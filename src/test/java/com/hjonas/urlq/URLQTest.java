@@ -4,9 +4,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import com.hjonas.urlq.ast.AstPrinter;
+import com.hjonas.urlq.ast.Expr;
+
+
+
 
 public class URLQTest {
 
+    // TODO: write better tests
     public void printAst() {
         String equalNotEqual = "age[:]12[and]name[~:]\"luis\"";
         String containNotContain = "name[#]\"la\"[and]surname[~#]\"ma\"";

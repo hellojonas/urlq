@@ -1,10 +1,10 @@
-package com.hjonas.urlq;
+package com.hjonas.urlq.ast;
 
 import java.util.stream.Collectors;
 
 public class AstPrinter {
 
-	void print(Expr expr) {
+	public void print(Expr expr) {
 		System.out.println(println(expr, 0));
 	}
 

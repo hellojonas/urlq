@@ -1,6 +1,4 @@
-package com.hjonas.urlq;
-
-import java.util.HashMap;
+package com.hjonas.urlq.ast;
 
 enum TokenType {
 	AND,

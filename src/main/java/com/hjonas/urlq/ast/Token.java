@@ -1,9 +1,9 @@
-package com.hjonas.urlq;
+package com.hjonas.urlq.ast;
 
 import java.util.HashMap;
 import java.util.Map;
 
-class Token {
+public class Token {
 	final TokenType type;
 	final String lexeme;
 	final Object literal;

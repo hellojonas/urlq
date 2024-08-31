@@ -1,23 +1,23 @@
-package com.hjonas.urlq;
+package com.hjonas.urlq.ast;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-class Parser {
-	final List<Token> tokens;
+public class Parser {
+	private final List<Token> tokens;
 	private int current;
 
-	Parser(List<Token> tokens) {
+	public Parser(List<Token> tokens) {
 		this.tokens = tokens;
 		this.current = 0;
 	}
 
-	Expr parse() {
+	public Expr parse() {
 		return logicOr();
 	}
 
-	Expr logicOr() {
+	private Expr logicOr() {
 		Expr expr = logicAnd();
 
 		while (match(TokenType.OR)) {
@@ -28,7 +28,7 @@ class Parser {
 		return expr;
 	}
 
-	Expr logicAnd() {
+	private Expr logicAnd() {
 		Expr expr = expression();
 
 		while (match(TokenType.AND)) {
@@ -39,7 +39,7 @@ class Parser {
 		return expr;
 	}
 
-	Expr expression() {
+	private Expr expression() {
 		if (match(TokenType.L_PAREN)) {
 			advance();
 			return group();
@@ -74,7 +74,7 @@ class Parser {
 		return expr;
 	}
 
-	Expr group() {
+	private Expr group() {
 		Expr expr = logicOr();
 
 		if (!match(TokenType.R_PAREN)) {
@@ -85,7 +85,7 @@ class Parser {
 		return new Expr.Group(expr);
 	}
 
-	Expr path() {
+	private Expr path() {
 		List<Token> identifiers = new ArrayList<>();
 		if (!match(TokenType.IDENTIFIER)) {
 			throw new ParserError(error("expected identifier.", prev()));
@@ -105,7 +105,7 @@ class Parser {
 		return new Expr.Path(identifiers);
 	}
 
-	Expr array() {
+	private Expr array() {
 		List<Expr> elements = new ArrayList<>();
 		elements.add(primary());
 
@@ -117,7 +117,7 @@ class Parser {
 		return new Expr.Array(elements);
 	}
 
-	Expr primary() {
+	private Expr primary() {
 		Token token = peek();
 
 		switch (token.type) {
@@ -149,26 +149,26 @@ class Parser {
 		throw new ParserError(error("Expected literal.", prev()));
 	}
 
-	boolean isAtEnd() {
+	private boolean isAtEnd() {
 		return tokens.get(current).type.equals(TokenType.EOF);
 	}
 
-	Token peek() {
+	private Token peek() {
 		return tokens.get(current);
 	}
 
-	Token advance() {
+	private Token advance() {
 		return tokens.get(current++);
 	}
 
-	boolean match(TokenType type) {
+	private boolean match(TokenType type) {
 		if (isAtEnd()) {
 			return false;
 		}
 		return tokens.get(current).type.equals(type);
 	}
 
-	Token prev() {
+	private Token prev() {
 		if (current == 0) {
 			return null;
 		}

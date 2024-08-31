@@ -1,6 +1,5 @@
-package com.hjonas.urlq;
+package com.hjonas.urlq.ast;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
@@ -8,20 +7,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-class Lexer {
+public class Lexer {
 	private String source;
 	private Integer start;
 	private Integer current;
 	private final List<Token> tokens;
 
-	Lexer(String source) {
+	public Lexer(String source) {
 		this.source = source;
 		this.start = 0;
 		this.current = 0;
 		this.tokens = new ArrayList<>();
 	}
 
-	List<Token> scan() {
+	public List<Token> scan() {
 		while (!isAtEnd()) {
 			char ch = advance();
 			switch (ch) {
@@ -172,21 +171,21 @@ class Lexer {
 		addToken(type);
 	}
 
-	void addToken(TokenType type) {
+	private void addToken(TokenType type) {
 		addToken(type, null);
 	}
 
-	void addToken(TokenType type, Object literal) {
+	private void addToken(TokenType type, Object literal) {
 		String lexeme = source.substring(start, current);
 		tokens.add(new Token(type, lexeme, literal, start, current));
 		start = current;
 	}
 
-	char advance() {
+	private char advance() {
 		return source.charAt(current++);
 	}
 
-	char peek(int n) {
+	private char peek(int n) {
 		if (isAtEnd() || current + n >= source.length()) {
 			return '\0';
 		}
@@ -194,11 +193,11 @@ class Lexer {
 		return source.charAt(current + n);
 	}
 
-	char peek() {
+	private char peek() {
 		return peek(0);
 	}
 
-	boolean isAtEnd() {
+	private boolean isAtEnd() {
 		return current >= source.length();
 	}
 
