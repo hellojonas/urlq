@@ -138,9 +138,11 @@ class Parser {
 				return path();
 			}
 			case TRUE: {
+				advance();
 				return new Expr.Literal(true);
 			}
 			case FALSE: {
+				advance();
 				return new Expr.Literal(false);
 			}
 		}
