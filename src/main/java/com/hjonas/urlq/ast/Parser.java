@@ -133,9 +133,6 @@ public class Parser {
 				advance();
 				return new Expr.Literal((Date) token.literal);
 			}
-			case IDENTIFIER: {
-				return path();
-			}
 			case TRUE: {
 				advance();
 				return new Expr.Literal(true);

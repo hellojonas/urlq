@@ -38,7 +38,6 @@ array               ::= primary ( "," primary )* ;
 
 primary             ::=  STRING
                         | NUMBER
-                        | IDENTIFIER
                         | TRUE
                         | FALSE 
                         | "$\"" DATE "\"" ;
