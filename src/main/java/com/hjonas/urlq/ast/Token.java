@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Token {
-	final TokenType type;
-	final String lexeme;
-	final Object literal;
+	public final TokenType type;
+	public final String lexeme;
+	public final Object literal;
 	final int start;
 	final int end;
 
-	Token(TokenType type, String lexeme, Object literal, int start, int end) {
+	public Token(TokenType type, String lexeme, Object literal, int start, int end) {
 		this.type = type;
 		this.lexeme = lexeme;
 		this.literal = literal;

@@ -1,6 +1,6 @@
 package com.hjonas.urlq.ast;
 
-enum TokenType {
+public enum TokenType {
 	AND,
 	OR,
 
