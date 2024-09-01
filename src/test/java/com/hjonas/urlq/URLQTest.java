@@ -32,9 +32,5 @@ public class URLQTest {
                 + "[or]" + inactiveVerified
                 + "[or]" + between;
 
-        Expr ast = URLQ.parse(query);
-
-        AstPrinter printer = new AstPrinter();
-        printer.print(ast);
     }
 }

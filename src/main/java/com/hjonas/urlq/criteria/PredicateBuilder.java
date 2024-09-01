@@ -14,11 +14,11 @@ import javax.persistence.criteria.Root;
 import com.hjonas.urlq.ast.Expr;
 import com.hjonas.urlq.ast.Token;
 
-public class Builder<T> {
+public class PredicateBuilder<T> {
 	private CriteriaBuilder cb;
 	private Root<T> root;
 
-	public Builder(CriteriaBuilder cb, Root<T> root) {
+	public PredicateBuilder(Root<T> root, CriteriaBuilder cb) {
 		this.cb = cb;
 		this.root = root;
 	}
@@ -94,9 +94,6 @@ public class Builder<T> {
 					List<Object> values = array((Expr.Array) e.right);
 
 					if (values.size() != 2) {
-						// TODO: throw proper error
-						// TODO: throw proper error
-						// TODO: throw proper error
 						throw new RuntimeException("betwee operator expects an array of 2 elements");
 					}
 
@@ -124,7 +121,7 @@ public class Builder<T> {
 		Path<Object> p = root.get(expr.identifiers.get(0).lexeme);
 
 		for (int i = 1; i < expr.identifiers.size(); i++) {
-			p = root.get(expr.identifiers.get(i).lexeme);
+			p = p.get(expr.identifiers.get(i).lexeme);
 		}
 
 		return p;
@@ -162,7 +159,7 @@ public class Builder<T> {
 		Object value = evaluate(right);
 		Class<?> valType = value.getClass();
 
-		Method asMethod;
+		Method asMethod = null;
 		try {
 			asMethod = Path.class.getMethod("as", Class.class);
 		} catch (NoSuchMethodException e) {
@@ -170,22 +167,37 @@ public class Builder<T> {
 		}
 
 		Path<?> path = path((Expr.Path) left);
-		Expression<?> pathExpression = (Expression<?>) asMethod.invoke(path, valType);
+		Expression<?> pathExpression = null;
 
-		Method compMethod;
+		try {
+			pathExpression = (Expression<?>) asMethod.invoke(path, valType);
+		} catch (IllegalArgumentException e) {
+			String _path = String.join("_", left.identifiers.stream().map(i -> i.lexeme).collect(Collectors.toList()));
+			throw new RuntimeException("could not cast '" + _path + "' to '" + valType.getName() + "'.");
+		} catch (IllegalAccessException | InvocationTargetException e) {
+		}
+
+		Method compMethod = null;
 		try {
 			compMethod = CriteriaBuilder.class.getMethod(methdoName, Expression.class, Expression.class);
 		} catch (NoSuchMethodException e) {
 		} catch (SecurityException e) {
 		}
 
-		return compMethod.invoke(cb, pathExpression, cb.literal(value).as(valType));
+		try {
+			return compMethod.invoke(cb, pathExpression, cb.literal(value).as(valType));
+		} catch (IllegalArgumentException e) {
+			String _path = String.join("_", left.identifiers.stream().map(i -> i.lexeme).collect(Collectors.toList()));
+			throw new RuntimeException("'" + _path + "' and '" + value + "' types are not comparable.");
+		} catch (IllegalAccessException | InvocationTargetException e) {
+		}
+		return null;
 	}
 
 	private Object between(Expr.Path left, Object start, Object end) {
 		Class<?> valType = start.getClass();
 
-		Method asMethod;
+		Method asMethod = null;
 		try {
 			asMethod = Path.class.getMethod("as", Class.class);
 		} catch (NoSuchMethodException e) {
@@ -193,9 +205,16 @@ public class Builder<T> {
 		}
 
 		Path<?> path = path(left);
-		Expression<?> pathExpression = (Expression<?>) asMethod.invoke(path, valType);
+		Expression<?> pathExpression = null;
+		try {
+			pathExpression = (Expression<?>) asMethod.invoke(path, valType);
+		} catch (IllegalArgumentException e) {
+			String _path = String.join("_", left.identifiers.stream().map(i -> i.lexeme).collect(Collectors.toList()));
+			throw new RuntimeException("could not cast '" + _path + "' to '" + valType.getName() + "'.");
+		} catch (IllegalAccessException | InvocationTargetException e) {
+		}
 
-		Method compMethod;
+		Method compMethod = null;
 		try {
 			compMethod = CriteriaBuilder.class.getMethod("between", Expression.class, Expression.class,
 					Expression.class);
@@ -203,6 +222,13 @@ public class Builder<T> {
 		} catch (SecurityException e) {
 		}
 
-		return compMethod.invoke(cb, pathExpression, cb.literal(start).as(valType), cb.literal(end).as(valType));
+		try {
+			return compMethod.invoke(cb, pathExpression, cb.literal(start).as(valType), cb.literal(end).as(valType));
+		} catch (IllegalArgumentException e) {
+			String _path = String.join("_", left.identifiers.stream().map(i -> i.lexeme).collect(Collectors.toList()));
+			throw new RuntimeException("'" + _path + "', '" + start + "' and '" + end + "' types are not comparable.");
+		} catch (IllegalAccessException | InvocationTargetException e) {
+		}
+		return null;
 	}
 }
