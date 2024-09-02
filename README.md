@@ -1,58 +1,61 @@
-# Custom Query Language
+# URLQ
 
-## Filters
+A simple library to filter resources using set of expressions on URL queries,
+thats conveted into *javax.persistence.criteria.Predicate*.
 
+## Usage
+
+Example using Spring Data JPA Specifications
+
+```java
+@RequiredArgsConstructor
+public class EmployeeService {
+
+    private final EmployeeRepository repository;
+
+    List<Employee> listEmployees() {
+
+        String filter = "inactive[:]false[and]createdAt[::]2024-01-01T00:00:00,2024-08-31T00:00:00"
+
+        Specification<Employee> specification = new Specification<Employee>() {
+            @Override
+                public Predicate toPredicate(Root<Employee> root, CriteriaQuery<?> cQuery, CriteriaBuilder builder) {
+                    return URLQ.predicate(root, builder, filter);
+                }
+        };
+
+        return repository.findAll(specification);
+    }
+
+}
+```
+
+## Operators
 
 Name                      | Syntax
 --------------------------|-----------
-Equal                     | *field[:]*
-Not equal                 | *field[~:]*
-Containing                | *field[#]*
-Not containing            | *field[~#]*
-Less than                 | *field[lt]*
-Less than or equal        | *field[lte]*
-Greater than              | *field[gt]*
-Greater than or equal     | *field[gte]*
-In                        | *field[in]*
-Not in                    | *field[~in]*
-Between                   | *field[::]*
+Equal                     | *field[:]value*
+Not equal                 | *field[~:]value*
+Containing                | *field[#]value*
+Not containing            | *field[~#]value*
+Less than                 | *field[lt]value*
+Less than or equal        | *field[lte]value*
+Greater than              | *field[gt]value*
+Greater than or equal     | *field[gte]value*
+In                        | *field[in]value1,value2,...*
+Not in                    | *field[~in]value1,value2,...*
+Between                   | *field[::]start,end*
 
-## Arrays
-
-Use comma (,) to create arrays, for example the following filters a resource
-which names not contained in the list specified.
-
-When used with between filter **field[:]** commas are ignored.
-
-```
-/resource?name[~in]Higor,Lugo
-```
-
-## Composite path
-
-Use underscore (_) to create composite paths, for example the following filters
-a resource which sub-resource creation date is between 2000-01-10 and 
-2005-04-22.
-
-```
-/resource?query=subResource_createdAt[::]2000-01-10,2005-04-22
-```
-
-## Logical operators
-
-```
-/resource?field1[::]2000-01-10,2005-04-22[or](field2[lt]1[and]field3[gt]field4)
-```
+## Logical Operators
 
 Name                      | Syntax
 --------------------------|-----------
-AND                       | *field[gt]2[and]field[lt]5*
-OR                        | *field[~:]field[or]field[:]1*
+AND                       | *field1[gt]value1[and]field2[lt]value2*
+OR                        | *field1[~:]value1[or]field2[:]value2*
 
+## Composite Path
+
+Use underscore '_' to create composite paths.
 
 ## Groupping
-Use underscore () to group expresssion
-
-```
-/resource?field1[::]2000-01-10,2005-04-22[or](field2[lt]1[and]field3[gt]field4)
-```
+Use parentheses '()' to group expresssion.

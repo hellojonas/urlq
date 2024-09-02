@@ -40,5 +40,5 @@ primary             ::=  STRING
                         | NUMBER
                         | TRUE
                         | FALSE 
-                        | "$\"" DATE "\"" ;
+                        | "$"  \"DATE\"  ;
 
